@@ -1,0 +1,24 @@
+FROM nextcloud:production-fpm
+
+RUN apt-get update 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget software-properties-common keyboard-configuration
+
+COPY . /srv
+
+RUN dpkg -i /srv/cudnn-local-repo-debian11-8.9.4.25_1.0-1_amd64.deb 
+
+WORKDIR /srv
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
+RUN dpkg -i cuda-keyring_1.1-1_all.deb
+RUN cp /var/cudnn-local-repo-debian11-8.9.4.25/cudnn-local-EFAC77AF-keyring.gpg /usr/share/keyrings/
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/12.2.1/local_installers/cuda-repo-debian11-12-2-local_12.2.1-535.86.10-1_amd64.deb
+RUN dpkg -i cuda-repo-debian11-12-2-local_12.2.1-535.86.10-1_amd64.deb
+RUN cp /var/cuda-repo-debian11-12-2-local/cuda-*-keyring.gpg /usr/share/keyrings/
+RUN add-apt-repository contrib
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
+    ffmpeg cuda libcudnn8 && rm -rf /var/lib/apt/lists/*
+
+

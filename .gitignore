@@ -1,0 +1,11 @@
+nginx.conf.bak
+nginx.conf.new
+nextcloud.log*
+*.pdf
+*.crt
+*.key
+db/
+config.php
+html/
+docker-compose.yml
+go-vod/
